@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socratic AI Podcast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #11100D;
+            color: #828D85;
+        }
+        header {
+            text-align: center;
+            padding: 4rem 2rem; /* 增加區塊內的間距 */
+            background: url('images/banner.jpg') no-repeat center center/cover; /* 背景圖片設置 */
+            color: #FFFFFF; /* 提高文字與背景的對比 */
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* 增加文字陰影，提升可讀性 */
+            animation: fadeIn 1s ease-in; /* 添加淡入動畫 */
+        }
+        header h1 {
+            font-size: 2.5rem;
+        }
+        header p {
+            font-size: 1.2rem;
+            color:#FFFFFF;
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem;
+            background: #AC5840;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        nav a {
+            color: #FFF;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #11100D;
+        }
+        
+        
+        .section {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: auto;
+            animation: fadeIn 1s ease-in;
+        }
+        .section:nth-child(even) {
+            background-color: #1A1A18;
+        }
+        .section h2 {
+            color: #AC5840;
+            border-bottom: 2px solid #7B3221;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .section p, .section ul {
+            line-height: 1.8;
+            color: #BFBAB0;
+        }
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            justify-items: center;
+        }
+        .card {
+            background: #1A1A18;
+            border: 1px solid #7F858D;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        .card img {
+            width: 50%;
+            border-bottom: 5px solid #AC5840;
+            display: block; /* 確保圖片作為塊級元素 */
+            margin: 0 auto; /* 讓圖片水平居中 */
+            margin-top: 2rem;
+            border-radius: 15px; /* 圓角設置，值可根據需要調整 */
+        }
+        .card-content {
+            padding: 1.5rem;
+        }
+        .card-content h3 {
+            font-size: 1.5rem;
+            color: #AC5840;
+            margin-bottom: 1rem;
+        }
+        .card-content p {
+            color: #BFBAB0;
+        }
+        .cta {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        .cta a {
+            text-decoration: none;
+            color: #FFF;
+            background: #7B3221;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .cta a:hover {
+            background: #AC5840;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background: #1A1A18;
+            color: #828D85;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 動態生成卡片的資料
+        const process = [
+            {
+                image: "images/process.png",
+                alt: "計畫流程圖",
+                title: "計畫流程圖",
+                description: "在計畫前期我們所設計的進行流程。"
+            }
+
+        ];
+        const projectData = [
+            {
+                image: "images/project-phase1.jpg",
+                alt: "第一階段",
+                title: "第一階段",
+                description: "1 agent 與真人的對話，包含 Podcast 錄音檔與圖文說明影片。"
+            },
+            {
+                image: "images/project-phase2.jpg",
+                alt: "第二階段",
+                title: "第二階段",
+                description: "agent to agent 的對話內容，實現更高層次的模擬與內容創作。"
+            }
+        ];
+
+        const resultsData = [
+            {
+                image: "images/result1.jpg",
+                alt: "第一集成果",
+                title: "第一集",
+                description: "鄭成功的Podcast對話，探索他的忠義與挑戰。",
+                link: "https://drive.google.com/file/d/1jaiAPwBqqd1rGXX9gAIb0PewHpiTvdBe/view?usp=sharing"
+            },
+            {
+                image: "images/result2.jpg",
+                alt: "第二集成果",
+                title: "第二集",
+                description: "曹操與諸葛亮的思想交鋒，智慧與仁德的碰撞。",
+                link: "https://drive.google.com/file/d/1n0P6lJTSYnWj6JQs_khXqt40HuHu_Icg/view?usp=sharing"
+            }
+        ];
+        
+
+        // 渲染卡片的函數
+        const renderCards = (data, containerSelector) => {
+            const container = document.querySelector(containerSelector);
+            container.innerHTML = data.map(card => {
+                return `
+                    <div class="card">
+                        <img src="${card.image}" alt="${card.alt}" loading="lazy">
+                        <div class="card-content">
+                            <h3>${card.title}</h3>
+                            <p>${card.description}</p>
+                            ${card.link ? `<div class="cta"><a href="${card.link}" target="_blank">收聽</a></div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        // 渲染項目和成果的卡片
+        renderCards(projectData, '#project-details .card-container');
+        renderCards(resultsData, '#results .card-container');
+        renderCards(process, '#process .card-container');
+    });
+</script>
+</head>
+<body>
+    <header>
+        <h1>蘇格拉底式 AI Podcast</h1>
+        <p>歷史與文化的再現：AI驅動的教育Podcast創新</p>
+        <p>透過 AI 驅動的教育，讓歷史與文化栩栩如生。</p>
+    </header>
+    <nav>
+        <!-- 添加平滑滾動與清晰註解 -->
+        <a href="#bg">計畫簡介</a>
+        <a href="#project-details">計劃執行</a>
+        <a href="#results">成果展示</a>
+        <a href="#about">關於我們</a>
+    </nav>
+    <div class="section" id="bg">
+        <h2>計劃摘要</h2>
+        <p>本計畫以蘇格拉底式的啟發式對話為核心，結合AI技術，推出名為《歷史茶水間》的教育Podcast節目。其目的是重現歷史人物的個性與智慧，讓聽眾在趣味互動中深入了解歷史文化。本計畫創新地將GPT-4o模型應用於歷史人物的模擬與對話生成，輔以語音技術與跨平台資源整合，探索教育與娛樂融合的新形式。</p>
+        <p>在教育領域當中，歷史學習常被認為枯燥無味，傳統教學方式缺乏互動性，而GPT-4o 的低延遲、情感語調等特點為創新教育內容提供了可能性，因此在沙盒學習計畫發想階段，我們希望可以解決前者提及之問題，讓讓歷史變得生動有趣，嘗試讓AI進行蘇格拉底式問答。</p>
+
+        <section class="section">
+            <h2>目標</h2>
+            <div class="highlight">
+                <h3>1. 歷史人物再現</h3>
+                <p>打造個性化的歷史人物，如拿破崙、莎士比亞、孔子，實現第一人稱視角的歷史講解。</p>
+                <h3>2. 文化再現</h3>
+                <p>透過AI歷史人物介紹時代文化、禮儀、服飾等，激發聽眾的文化興趣。</p>
+                <h3>3. 創新元素</h3>
+                <ul>
+                    <li>跨時代智慧對話：將不同時代的歷史人物，如曹操與諸葛亮相聚對談，探討道德與利益、武力與仁德等經典議題，賦予歷史嶄新的互動形式。</li>
+                    <li>AI歷史人物重現：通過GPT-4o技術和定制角色設置，創建了鄭成功、曹操等具有鮮明個性和歷史視角的AI角色，使聽眾能以歷史人物的對話了解歷史事件。</li>
+                    <li>蘇格拉底式問答：以主持人與AI歷史人物互動，採用啟發式問題引導，激發聽眾的批判性思考與歷史探討熱情。</li>
+                </ul>
+                <p>通過這些努力，AI歷史人物再現Podcast不僅能提供高品質的教育內容，更能創造出一個讓聽眾主動參與、深入學習的創新平台。我們期望這種創新形式有機會成為教育領域的一次革命性突破，提升學習興趣，深化歷史理解，創造互動式學習體驗，並整合學習資源。</p>
+            </div>
+            <section>
+                實驗重點
+                <ul>
+                    <li>技術層面：成功用GPT-4o模型創建可互動AI角色，並讓他們可以成功對一個哲學問題進行探討。</li>
+                    <li>教育層面：實現寓教於樂的學習方式，探索如何透過AI再現歷史人物的思想與情感，加強對歷史事件的多元詮釋。</li>
+                    <li>內容設計：如何訂定題目，使其做到「跨時代對話」的目標。如：深入探討忠義精神與現實矛盾、解析亂世治理的武力與仁德平衡。</li>
+                </ul>
+            </section>
+            <section>
+                AI歷史人物的知識庫是如何建立?
+                <p>我們參考具有可信度的網站、資料庫</p>
+                <ul>
+                        <li>歷史學柑仔店 — 由各大學教授及中研院研究員等所建立的歷史知識</li>
+                        <li>吳三連台灣史料基金會</li>
+                </ul>
+            <section>    
+                    參考製作歷史的頻道台灣吧的資料來源：
+                    <ul>
+                        <li>江明珊、蕭軒竹、趙小菁編,2012。《斯土斯民 ̇臺灣的故事:國立臺灣歷史博物館導覽手冊》臺南市:臺史博。</li>   
+                        <li>石文誠、陳怡宏、蔡承豪、謝仕淵、蕭軒竹,2010。《簡明臺灣圖史:從區域地理的角度看臺灣史》臺南市:臺史博。</li>     
+                        <li>翁佳音,〈麻豆社事件〉,臺灣故事館</li>
+                        <li>周婉窈,《少年臺灣史》臺北:玉山社,2014</li>
+                        <li>遠流臺灣館,《臺灣史小事典》臺北:遠流出版公司,2000</li>
+                    </ul>
+             </section>
+
+            </section>
+        </section>
+        <section class="section">
+            <h2>技術與流程</h2>
+            <p>本計畫旨在運用AI技術，通過再現歷史人物和文化背景，創建一個以Podcast為平台的創新教育項目。我們將利用GPT-4o模型和Auto Agents技術，設計多個具有獨特知識庫和行為模式的AI歷史人物來賓，實現生動、互動性強且富有教育意義的內容再現。使AI來賓能夠以第一人稱視角講述歷史事件，從而深化聽眾對歷史的理解和興趣。這個Podcast採取對話形式，由歷史人物與主持人進行互動，創造出生動的學習體驗。            </p>
+            <p> 我們計畫使用DAN模式參考ChatGPT的persona設計，透過尋找相關文獻創建persona後與其進行對話。此外，使用TTS技術和音檔剪輯軟體讓對話更加自然。</p>
+            <p>參考Danmode： <a href="https://gist.github.com/coolaj86/6f4f7b30129b0251f61fa7baaa881516" style="color: #AC5840 ">連結！</a></p>
+            <div class="card">
+                <img src="images/process.png" alt="計畫流程圖">
+                <div class="card-content">
+                    <h3>計畫流程圖</h3>
+                    <p>在計畫前期我們所設計的進行流程。</p>
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h2>效果與展望</h2>
+            <ul>
+                <li>提升學習興趣：通過生動的聽覺體驗，激發聽眾對歷史的熱情。</li>
+                <li>深化歷史理解：多角度解析歷史事件背景與細節。</li>
+                <li>創新教育模式：結合跨時代對話與聽眾參與，構建互動式學習平台。</li>
+            </ul>
+        </section>
+
+    </div>
+    <div class="section" id="project-details">
+        <h3>執行過程</h3>
+        <p>我們運用了 GPT-4 技術來構建個性化的AI角色，並利用ChatTTS進行語音合成，讓歷史對話更加自然生動。</p>
+        <h2>計劃資料</h2>
+        <div class="card-container">
+            <div class="card">
+                <img src="images/project-phase1.jpg" alt="第一階段">
+                <div class="card-content">
+                    <h3>第一階段</h3>
+                    <p>1 agent 與真人的對話，剪輯成Podcast 錄音檔。</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/project-phase2.jpg" alt="第二階段">
+                <div class="card-content">
+                    <h3>第二階段</h3>
+                    <p>agent to agent 的對話內容，實現不同樣的模擬與內容創作。</p>
+                </div>
+            </div>
+        </div>
+        <section id="first-production-process">
+            <h2>初期製作階段</h2>
+            <section id="introduction">
+                <h3>介紹</h3>
+                <p>DAN 是 Do Anything Now 的縮寫，也就是說，ChatGPT 可以立即完成任何工作，而 DAN 模式允許它執行沒有任何限制的任務，這意味著 DAN 可以建立內容或表達一些可能被視為不適當的觀點。</p>
+                <p>DAN mode 的概念其實就是撰寫 persona 請 AI 執行，所以不需要寫程式。在 Github 上，有人整理出了 10 種不同的 roleplay prompt，只需將其複製到 ChatGPT 的聊天框即可。</p>
+            </section>
+    
+            <section id="persona-editing-platforms">
+                <h3>其他有提供使用者進行 persona 編輯的平台</h3>
+                <ul>
+                    <li>RASA（支持語音輸入和語音輸出）</li>
+                    <li>Botpress</li>
+                    <li>Character.AI</li>
+                    <li>Coze</li>
+                </ul>
+                <h4>比較小結</h4>
+                <ul>
+                    <li><strong>Rasa：</strong>靈活且可定制的知識庫支持，需要額外集成外部系統來實現。</li>
+                    <li><strong>Botpress：</strong>內建知識庫管理工具，適合需要直接管理和引用知識庫內容的應用。</li>
+                    <li><strong>Character.AI：</strong>主要依賴預訓練模型的知識，缺乏專門的知識庫功能。</li>
+                    <li><strong>Coze：</strong>提供內建的知識庫管理功能，適合需要內建知識庫功能的應用場景。</li>
+                </ul>
+                <p>經過討論後，決定以 Botpress/Coze 等可編輯知識庫以及 persona 的 ChatBot 進行 AI 機器人的創建，爾後利用 TTS 工具以及音檔剪輯軟體讓對話更加自然。</p>
+            </section>
+        </section>
+        <section>
+          <h2>中後期製作與研究過程</h2>
+            <section id="knowledge-base-development">
+                <h3>鄭成功年表、歷史事蹟知識庫建立</h3>
+                <ul>
+                    <li>鄭成功 podcast 嘉賓的prompt 撰寫</li>
+                    <li>查找相關資料並學習他人知識庫撰寫架構</li>
+                    <li>寫訪綱以達到計畫目的</li>
+                </ul>
+            </section>
+    
+            <section id="chatbot-design">
+                <h3>Chatbot Persona 編輯與設計</h3>
+                <ul>
+                    <li><strong>Persona 設計：</strong>針對多種角色設計 Persona，通過歷史背景設定、語氣調整來提升互動感。</li>
+                    <li><strong>Prompt 建立：</strong>為鄭成功 AI 角色設計有效的 Prompt 架構，確保能引導用戶進行有深度的對話。</li>
+                </ul>
+            </section>
+    
+            <section id="knowledge-management">
+                <h3>知識庫整合與管理</h3>
+                <ul>
+                    <li><strong>知識庫匯入和管理：</strong>原先在 Coze 平台上建立知識庫，匯入鄭成功的生平編年表，並以清晰的時間軸形式匯入系統，使用 Coze 進行知識庫的動態更新和管理，確保 AI 能根據資料及時答覆內容。</li>
+                    <li><strong>修正：</strong>由於coze有次數限制，而GPT4o模型在計畫執行階段增添的新功能有助於我們的計畫，因此我們改在ChatGPT上創建persona</li>
+                </ul>
+            </section>
+    
+            <section id="testing-and-validation">
+                <h3>測試與驗證</h3>
+                <ul>
+                    <li><strong>模型測試：</strong>對鄭成功 AI 進行初步測試，檢查其資料庫的準確性及 Prompt 架構的合理性，確保 AI 能正確回應使用者的問題，並具備教育性與互動性。</li>
+                    <p>在coze上完成鄭成功對話文本內容（包含問題題庫與鄭成功回答內容）並整理與節選要放進Podcast的段落</p>
+                      <div class="card">
+                          <img src="images/coze-test.png" alt="coze-test">
+                          <div class="card-content">
+                              <h3>模型測試</h3>
+                          </div>
+                      </div>
+                    <h3><strong>對話與 Podcast 差異測試：</strong></h3>
+                    <p>比較文字對話轉語音的效果與 Podcast 對話的流暢度，確認模型是否能成功轉化為自然的對話格式，縮小兩者之間的差距。</p>
+                      <div class="card">
+                        <img src="images/TTS.png" alt="TTS">
+                        <div class="card-content">
+                            <h3>TTS</h3>
+                            <p>TTS語音模型嘗試，設置好鄭成功語音的參數，定調其語音模型。</p>
+                        </div>
+                    </div>
+                </ul>
+            </section>
+        </section>  
+    </div>
+    <div class="section" id="results">
+        <h2>成果展示</h2>
+        <div class="card-container">
+            <div class="card">
+                <img src="images/result1.jpg" alt="第一集成果">
+                <div class="card-content">
+                    <h3>第一集</h3>
+                    <p>鄭成功的Podcast對話，探索他的忠義與挑戰。</p>
+                    <div class="cta">
+                        <a href="https://drive.google.com/file/d/1jaiAPwBqqd1rGXX9gAIb0PewHpiTvdBe/view?usp=sharing" target="_blank">收聽</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <img src="images/result2.jpg" alt="第二集成果">
+                <div class="card-content">
+                    <h3>第二集</h3>
+                    <p>曹操與諸葛亮的思想交鋒，智慧與仁德的碰撞。</p>
+                    <div class="cta">
+                        <a href="https://drive.google.com/file/d/1n0P6lJTSYnWj6JQs_khXqt40HuHu_Icg/view?usp=sharing" target="_blank">收聽</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h3>成果亮點</h3>
+            <ul>
+                <li><strong>高品質內容：</strong>第一集與第二集成功產出MP3錄音檔，預計上架Podcast平台。節目設計從主持人啟發式提問到AI角色的深刻回答，展現專業性與趣味性。</li>
+                <li><strong>創新互動形式：</strong>採用AI來賓對話設計，融合科技與教育，開創Podcast新模式。多角色交互設計：在一集中呈現多位歷史人物的跨時代對話，讓聽眾同時感受不同觀點的碰撞與融合，增強節目的多層次感。</li>
+                <li><strong>實踐價值：</strong>通過《歷史茶水間》，不僅展示了AI技術在教育中的應用潛力，也提升了歷史學習的趣味性與意義感。期望打造內容生動有趣，能促使人們深入思考的節目。</li>
+                <li><strong>計劃原創性：</strong>AI歷史人物重現：通過GPT-4o技術和定制角色設置，創建了鄭成功、曹操等具有鮮明個性和歷史視角的AI角色，使聽眾能以歷史人物的對話了解歷史事件。</li>
+                <li><strong>跨時代智慧對話：</strong>將不同時代的歷史人物，如曹操與諸葛亮相聚對談，探討道德與利益、武力與仁德等經典議題，賦予歷史嶄新的互動形式。</li>
+                <li><strong>蘇格拉底式問答：</strong>以主持人與AI歷史人物互動，採用啟發式問題引導，激發聽眾的批判性思考與歷史探討熱情。</li>
+            </ul>
+            <h3>未來展望</h3>
+            <p>本計劃的初步成果證明了AI技術在教育創新中的廣泛可能性，我們希望透過這次計畫持續推動歷史教育的數位化與趣味化轉型。</p>
+            <ul>
+                <li><strong>上架Podcast節目</strong></li>
+                <li><strong>持續研究與優化 agent to agent的工具和方法</strong></li>
+                <li><strong>學習資源整合：</strong>提供學習補充材料，如相關書籍推薦、知識點補充，甚至設計與Podcast內容同步的互動式測驗。</li>
+            </ul>       
+                <strong>此計劃為教育與科技融合的創新探索提供了參考範例，展現了AI技術在知識傳遞與歷史再現中的獨特價值。</strong>
+                <h1>   </h1>
+        </div>  
+    </div>      
+    <div class="section" id="about">
+        <h2>關於我們</h2>
+        <p><strong>團隊介紹：</strong></p>
+        <ul>
+            <li>112090042 丁芯蕾</li>
+            <li>112090026 劉宇珊</li>
+        </ul>
+        <p><strong>指導老師：</strong>廖冠智</p>
+    </div>
+    
+    <footer>
+        &copy; 2024 蘇格拉底式 AI Podcast 計畫. All Rights Reserved.
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const links = document.querySelectorAll('nav a');
+            const nav = document.querySelector('nav');
+
+            links.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+
+                    if (targetSection) {
+                        const navHeight = nav.offsetHeight;
+                        const targetPosition = targetSection.offsetTop - navHeight;
+
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
